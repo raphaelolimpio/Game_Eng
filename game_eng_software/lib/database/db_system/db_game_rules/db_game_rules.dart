@@ -1,63 +1,70 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
 
-class DbGroup {
-  final String baseUrl = 'http://localhost:3000/group';
+class DbGameRules {
+  final String baseUrl = 'http://localhost:3000/game_rules';
 
-  Future<List<dynamic>> getGroup() async {
+  Future<List<dynamic>> getGameRules() async {
     final response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load groups');
+      throw Exception('Failed to load game rules');
     }
   }
 
-  Future<dynamic> getGroupById(int id) async {
+  Future<dynamic> getGameRuleById(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/$id'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
-    } else if (response.statusCode == 404) {
-      throw Exception('Group not found');
     } else {
-      throw Exception('Failed to load group');
+      throw Exception('Failed to load game rule');
     }
   }
 
-  Future<void> createGroup(String name, Float points) async {
+  Future<void> createGameRule(String titleRule, String description) async {
     final response = await http.post(
       Uri.parse(baseUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{'name': name, 'points': points}),
+      body: jsonEncode(<String, dynamic>{
+        'titleRule': titleRule,
+        'description': description,
+      }),
     );
 
     if (response.statusCode != 201) {
-      throw Exception('Falha ao criar o grupo');
+      throw Exception('Failed to create game rule');
     }
   }
 
-  Future<void> updateGroup(int id, String name, Float points) async {
+  Future<void> updateGameRule(
+    int id,
+    String titleRule,
+    String description,
+  ) async {
     final response = await http.put(
       Uri.parse('$baseUrl/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{'name': name, 'points': points}),
+      body: jsonEncode(<String, dynamic>{
+        'titleRule': titleRule,
+        'description': description,
+      }),
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Falha ao atualizar o grupo');
+      throw Exception('Failed to update game rule');
     }
   }
 
-  Future<void> deleteGroup(int id) async {
+  Future<void> deleteGameRule(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/$id'));
 
     if (response.statusCode != 200) {
-      throw Exception('Falha ao deletar o grupo');
+      throw Exception('Failed to delete game rule');
     }
   }
 }

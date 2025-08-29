@@ -1,65 +1,79 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class DbClass {
-  final String baseUrl = 'http://localhost:3000/class';
+class DbAlternatives {
+  final String baseUrl = 'http://localhost:3000/alternatives_quest';
 
-  Future<List<dynamic>> getClass() async {
+  Future<List<dynamic>> getAlternatives() async {
     final response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load class');
+      throw Exception('Failed to load alternatives');
     }
   }
 
-  Future<dynamic> getClassById(int id) async {
+  Future<dynamic> getAlternativeById(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/$id'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 404) {
-      throw Exception('Class not found');
+      throw Exception('Alternative not found');
     } else {
-      throw Exception('Failed to load class');
+      throw Exception('Failed to load alternative');
     }
   }
 
-  Future<void> createClass(int period, String subject) async {
+  Future<void> createAlternative(
+    int idQuest,
+    String textAlternative,
+    bool isTrue,
+  ) async {
     final response = await http.post(
       Uri.parse(baseUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{'period': period, 'subject': subject}),
+      body: jsonEncode(<String, dynamic>{
+        'idQuest': idQuest,
+        'textAlternative': textAlternative,
+        'isTrue': isTrue,
+      }),
     );
 
     if (response.statusCode != 201) {
-      throw Exception('Falha ao criar o class');
+      throw Exception('Failed to create alternative');
     }
   }
 
-  Future<void> updateClass(int id, int newPeriod, String newSubject) async {
+  Future<void> updateAlternative(
+    int id,
+    int idQuest,
+    String textAlternative,
+    bool isTrue,
+  ) async {
     final response = await http.put(
       Uri.parse('$baseUrl/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'period': newPeriod,
-        'subject': newSubject,
+        'idQuest': idQuest,
+        'textAlternative': textAlternative,
+        'isTrue': isTrue,
       }),
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Falha ao atualizar o class');
+      throw Exception('Failed to update alternative');
     }
   }
 
-  Future<void> deleteClass(int id) async {
+  Future<void> deleteAlternative(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/$id'));
 
     if (response.statusCode != 200) {
-      throw Exception('Falha ao deletar o class');
+      throw Exception('Failed to delete alternative');
     }
   }
 }

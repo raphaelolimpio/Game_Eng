@@ -13,6 +13,17 @@ class DbUser {
     }
   }
 
+  Future<dynamic> getUserById(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/$id'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 404) {
+      throw Exception('User not found');
+    } else {
+      throw Exception('Failed to load user');
+    }
+  }
+
   Future<void> createUser(
     String name,
     String email,

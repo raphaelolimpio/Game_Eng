@@ -25,6 +25,7 @@ db.connect(err=> {
 app.use(express.json());
 
 //user -----------------------------------------------------------------------------------------------------
+
 app.post('/users', (req, res) => {
   const { nome, email, password, registration, points, level, idFunction, idGroup, idClass } = req.body;
   const query = 'INSERT INTO users (nome, email, password, registration, points, level, idFunction, idGroup, idClass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -94,6 +95,7 @@ app.delete('/users/:idUser', (req, res) => {
 });
 
 // master ----------------------------------------------------------------------------------------
+
 app.post('/master', (req, res) => {
   const { nome, email, senha, idClass } = req.body;
   const query = 'INSERT INTO master (nome, email, senha, idClass) VALUES (?, ?, ?, ?)';
@@ -161,6 +163,7 @@ app.delete('/master/:idMaster', (req, res) => {
 });
 
 // Class ---------------------------------------------------------------------------------------------
+
 app.post('/class', (req, res) => {
   const { period, subject } = req.body;
   const query = 'INSERT INTO class (period, subject) VALUES (?, ?, ?)';
@@ -230,6 +233,7 @@ app.delete('/class/:idClass', (req, res) => {
 });
 
 // function -------------------------------------------------------------------------------------------------
+
 app.post('/function', (req, res) => {
   const { name, description } = req.body;
   const query = 'INSERT INTO function (name, description) VALUES (?, ?)';
@@ -299,6 +303,7 @@ app.delete('/function/:idFunction', (req, res) => {
 });
 
 //grupo -----------------------------------------------------------------------------------------------------
+
 app.post('/group', (req, res) => {
 const { nome } = req.body;
 const query = 'INSERT INTO group (nome) VALUES (?)';
@@ -368,6 +373,7 @@ app.delete('/group/:idGroup', (req, res) => {
 });
 
 //match ----------------------------------------------------------------------------------------
+
 app.post('/match', (req, res) => {
   const { idMaster, data_inicio, estado_partida } = req.body;
   const query = 'INSERT INTO match (idMaster, data_inicio, estado_partida) VALUES (?, ?, ?)';
@@ -437,6 +443,7 @@ app.delete('/match/:idMatch', (req, res) => {
 });
 
 //match_group ----------------------------------------------------------------------------------------
+
 app.post('/match_group', (req, res) => {
   const { idMatch, idGroup } = req.body;
   const query = 'INSERT INTO match_group (idMatch, idGroup) VALUES (?, ?)';
@@ -460,10 +467,10 @@ app.get('/match_group', (res) => {
   });
 });
 
-app.get('/match_group/:idGroup', (req, res) => {
-  const { idGroup } = req.params;
-  const query = 'SELECT idMatch, idGroup, pontuacao_match, posicao_rank FROM match_group WHERE idGroup = ?';
-  db.query(query, [idGroup], (err, results) => {
+app.get('/match_group/:idMatchGroup', (req, res) => {
+  const { idMatchGroup } = req.params;
+  const query = 'SELECT idMatch, idGroup, pontuacao_match, posicao_rank FROM match_group WHERE idMatchGroup = ?';
+  db.query(query, [idMatchGroup], (err, results) => {
     if (err) {
       res.status(500).send('Erro ao buscar grupo.');
       return;
@@ -476,11 +483,11 @@ app.get('/match_group/:idGroup', (req, res) => {
   });
 });
 
-app.put('/match_group/:idGroup', (req, res) => {
-  const { idGroup } = req.params;
+app.put('/match_group/:idMatchGroup', (req, res) => {
+  const { idMatchGroup } = req.params;
   const { pontuacao_match, posicao_rank } = req.body;
-  const query = 'UPDATE match_group SET pontuacao_match = ?, posicao_rank = ? WHERE idGroup = ?';
-  db.query(query, [pontuacao_match, posicao_rank, idGroup], (err, result) => {
+  const query = 'UPDATE match_group SET pontuacao_match = ?, posicao_rank = ? WHERE idMatchGroup = ?';
+  db.query(query, [pontuacao_match, posicao_rank, idMatchGroup], (err, result) => {
     if (err) {
       res.status(500).send('Erro ao atualizar grupo.');
       return;
@@ -489,7 +496,7 @@ app.put('/match_group/:idGroup', (req, res) => {
   });
 });
 
-app.delete('/match_group/:idGroup', (req, res) => {
+app.delete('/match_group/:idMatchGroup', (req, res) => {
   const { idGroup } = req.params;
   const query = 'DELETE FROM match_group WHERE idGroup = ?';
   db.query(query, [idGroup], (err, result) => {
@@ -507,6 +514,7 @@ app.delete('/match_group/:idGroup', (req, res) => {
 
 
 //quests --------------------------------------------------------------------------------------------------
+
 app.post('/quests', (req, res) => {
   const { idQuest, idFunction, text_quest, level } = req.body;
   const query = 'INSERT INTO quests (idQuest, idFunction, level, text_quest) VALUES (?, ?, ?, ?)';
@@ -576,6 +584,7 @@ app.delete('/quest/:idQuest', (req, res) => {
 });
 
 //alternatives_quest --------------------------------------------------------------------------------------------------
+
 app.post('/alternatives_quest', (req, res) => {
   const { idAlternatives, idQuest, text_alternative, isTrue } = req.body;
   const query = 'INSERT INTO alternatives_quest (idAlternatives, idQuest, text_alternative, isTrue) VALUES (?, ?, ?, ?)';
@@ -645,6 +654,7 @@ app.delete('/alternatives_quest/:idQuest', (req, res) => {
 });
 
 //Answers --------------------------------------------------------------------------------------------------
+
 app.post('/answers', (req, res) => {
   const { idAnswers, idMatch, idQuest, idUser, idGroup, answers, isTrue, pontos_conquistados, timestamp } = req.body;
   const query = 'INSERT INTO answers (idAnswers, idMatch, idQuest, idUser, idGroup, answers, isTrue, pontos_conquistados, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -714,6 +724,7 @@ app.delete('/answers/:idQuest', (req, res) => {
 });
 
 //game_rule --------------------------------------------------------------------------------------------------
+
 app.post('/game_rule', (req, res) => {
   const { idRule, title_rule, description } = req.body;
   const query = 'INSERT INTO game_rule (idRule, title_rule, description) VALUES (?, ?, ?)';
@@ -783,6 +794,7 @@ app.delete('/game_rule/:idRule', (req, res) => {
 });
 
 //game_card --------------------------------------------------------------------------------------------------
+
 app.post('/game_card', (req, res) => {
   const { idCard, title_card, description } = req.body;
   const query = 'INSERT INTO game_card (idCard, title_card, description) VALUES (?, ?, ?)';
@@ -850,6 +862,7 @@ app.delete('/game_card/:idCard', (req, res) => {
     res.json({ message: 'Carta de jogo deletada com sucesso!' });
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);

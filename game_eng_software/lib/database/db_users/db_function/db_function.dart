@@ -13,6 +13,17 @@ class DbFunction {
     }
   }
 
+  Future<dynamic> getFunctionById(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/$id'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 404) {
+      throw Exception('Function not found');
+    } else {
+      throw Exception('Failed to load function');
+    }
+  }
+
   Future<void> createFunction(String name, String description) async {
     final response = await http.post(
       Uri.parse(baseUrl),
