@@ -1,0 +1,79 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class DbAlternatives {
+  final String baseUrl = 'http://localhost:3000/alternatives_quest';
+
+  Future<List<dynamic>> getAlternatives() async {
+    final response = await http.get(Uri.parse(baseUrl));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load alternatives');
+    }
+  }
+
+  Future<dynamic> getAlternativeById(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/$id'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 404) {
+      throw Exception('Alternative not found');
+    } else {
+      throw Exception('Failed to load alternative');
+    }
+  }
+
+  Future<void> createAlternative(
+    int idQuest,
+    String textAlternative,
+    bool isTrue,
+  ) async {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'idQuest': idQuest,
+        'textAlternative': textAlternative,
+        'isTrue': isTrue,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to create alternative');
+    }
+  }
+
+  Future<void> updateAlternative(
+    int id,
+    int idQuest,
+    String textAlternative,
+    bool isTrue,
+  ) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'idQuest': idQuest,
+        'textAlternative': textAlternative,
+        'isTrue': isTrue,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update alternative');
+    }
+  }
+
+  Future<void> deleteAlternative(int id) async {
+    final response = await http.delete(Uri.parse('$baseUrl/$id'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete alternative');
+    }
+  }
+}
