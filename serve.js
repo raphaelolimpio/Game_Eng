@@ -28,7 +28,7 @@ app.use(express.json());
 
 app.post('/users', (req, res) => {
   const { nome, email, password, registration, points, level, idFunction, idGroup, idClass } = req.body;
-  const query = 'INSERT INTO users (nome, email, password, registration, points, level, idFunction, idGroup, idClass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO users (name, email, password, registration, points, level, idFunction, idGroup, idClass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
   db.query(query, [nome, email, password, registration, points, level, idFunction, idGroup, idClass], (err, result) => {
     if (err) {
       res.status(500).send('Erro ao criar usuário.');
@@ -121,7 +121,7 @@ app.get('/master', (req, res) => {
 });
 app.get('/master/:idMaster', (req, res) => {
   const { idMaster } = req.params;
-  const query = 'SELECT mt.idMaster, mt.nome, mt.email, mt.senha, c.period AS class_period, c.subject AS class_subject FROM master AS mt LEFT JOIN class AS c ON mt.idClass = c.idClass WHERE mt.idMaster = ?';
+  const query = 'SELECT mt.idMaster, mt.name, mt.email, mt.senha, c.period AS class_period, c.subject AS class_subject FROM master AS mt LEFT JOIN class AS c ON mt.idClass = c.idClass WHERE mt.idMaster = ?';
   db.query(query, [idMaster], (err, results) => {
     if (err) {
       res.status(500).send('Erro ao buscar master.');
